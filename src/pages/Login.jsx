@@ -1,6 +1,6 @@
 import { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -27,7 +27,7 @@ function Login() {
         }
 
         try {
-            const response = await fetch("https://api.example.com/login", {
+            const response = await fetch("https://api.example.com/login", { // FIXME en attente de l'API
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
