@@ -17,7 +17,8 @@ function App() {
         <header>
           <Link to="/">Page Accueil</Link><br />
           <Link to="/register">Inscription</Link><br />
-          <Link to="/login">Connexion</Link>
+          <Link to="/login">Connexion</Link><br />
+          <Link to="/dashboard">Tableau de bord</Link><br />
         </header>
         <Routes>
           <Route path="/" element={<p>Page Accueil</p>} />

@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router";
 import { z } from "zod";
+import { setToken } from "../utils/auth";
 
 const loginSchema = z.object({
     email: z.string().email({ message: "Email invalide" }),
@@ -27,7 +28,7 @@ function Login() {
         }
 
         try {
-            const response = await fetch("http://localhost:3000/Login", {
+            const response = await fetch("http://localhost:3000/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
@@ -36,9 +37,10 @@ function Login() {
             const data = await response.json();
 
             if (response.ok) {
+                setToken(data.token);
                 login(data.token);
                 setMessage("Connexion réussie !");
-                navigate("/");
+                navigate("/dashboard");
             } else {
                 setMessage(data.error || "Identifiants incorrects.");
             }
