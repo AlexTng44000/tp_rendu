@@ -27,7 +27,7 @@ function Login() {
         }
 
         try {
-            const response = await fetch("https://api.example.com/login", { // FIXME en attente de l'API
+            const response = await fetch("http://localhost:3000/Login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({ email, password }),
