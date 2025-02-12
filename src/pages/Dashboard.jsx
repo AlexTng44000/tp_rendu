@@ -1,6 +1,7 @@
 import { useEffect, useState, useContext } from "react";
 import { UserContext } from "../context/UserContext";
 import { useNavigate } from "react-router";
+import { getToken } from "../utils/auth";
 
 function Dashboard() {
     const { user, logout } = useContext(UserContext);
@@ -9,11 +10,19 @@ function Dashboard() {
 
     useEffect(() => {
         const fetchUserData = async () => {
+            const token = getToken();
+            if (!token) {
+                logout();
+                navigate("/login");
+                return;
+            }
+
             try {
                 const response = await fetch("http://localhost:3000/dashboard", {
-                    headers: { Authorization: `Bearer ${user.token}` },
+                    headers: { Authorization: `Bearer ${token}` },
                 });
                 const data = await response.json();
+
                 if (response.ok) {
                     setUserData(data);
                 } else {
@@ -22,11 +31,13 @@ function Dashboard() {
                 }
             } catch (error) {
                 console.error("Erreur lors de la récupération des données utilisateur", error);
+                logout();
+                navigate("/login");
             }
         };
 
-        if (user) fetchUserData();
-    }, [user, logout, navigate]);
+        fetchUserData();
+    }, [logout, navigate]);
 
     return (
         <div>
