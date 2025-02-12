@@ -1,10 +1,14 @@
 import { useState } from "react";
 import { z } from "zod";
+import { useNavigate } from "react-router";
 
 const userSchema = z.object({
-    email: z.string().email(),
-    password: z.string().min(8),
-    confirmPassword: z.string().min(8),
+    email: z.string().email({ message: "Email invalide" }),
+    password: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
+    confirmPassword: z.string().min(8, { message: "Le mot de passe doit contenir au moins 8 caractères" }),
+}).refine((data) => data.password === data.confirmPassword, {
+    message: "Les mots de passe ne correspondent pas.",
+    path: ["confirmPassword"],
 });
 
 function Register() {
@@ -13,33 +17,30 @@ function Register() {
     const [confirmPassword, setConfirmPassword] = useState("");
     const [message, setMessage] = useState("");
 
+    const navigate = useNavigate();
+
     const SubmitRegister = async (e) => {
         e.preventDefault();
 
-        const parsed = userSchema.safeParse({ email, password, confirmPassword })
+        const parsed = userSchema.safeParse({ email, password, confirmPassword });
 
-        if (password !== confirmPassword) {
-            setMessage("Les mots de passe ne correspondent pas.");
+        if (!parsed.success) {
+            setMessage(parsed.error.errors[0].message);
             return;
         }
-
-        if (parsed.success) {
-            alert("Données valides");
-        }
-
-
 
         try {
             const response = await fetch("http://localhost:3000/register", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ email, password }),
             });
 
             const data = await response.json();
 
             if (response.ok) {
                 setMessage("Inscription réussie !");
+                setTimeout(() => navigate("/login"), 2000);
             } else {
                 setMessage(data.error || "Une erreur est survenue.");
             }
