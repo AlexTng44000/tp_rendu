@@ -29,7 +29,7 @@ const ChangePassword = () => {
                 return;
             }
 
-            const response = await fetch("http://localhost:3000/password", {
+            const response = await fetch("http://localhost:3000/change-password", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
