@@ -7,7 +7,7 @@ function ProtectedRoute({ element }) {
     const { user } = useContext(UserContext);
     const [isLoading, setIsLoading] = useState(true);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
-
+    // Modification à effectuer à partir du context sans passer par le getToken
     useEffect(() => {
         const token = getToken();
         if (token) {
